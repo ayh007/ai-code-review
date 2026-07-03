@@ -34,7 +34,7 @@
 
 ```bash
 # 1. 克隆项目
-git clone https://github.com/yourname/ai-code-review.git
+git clone https://github.com/ayh007/ai-code-review.git
 cd ai-code-review
 
 # 2. 安装依赖
@@ -84,25 +84,39 @@ acr review --output json
 ## 🎨 输出展示
 
 ```
-╭──────────────────────────────────────────────────────────╮
-│ 🔍 AI Code Review                                        │
-│ Model: deepseek-chat · Files: 3 · +15 -8                 │
-╰──────────────────────────────────────────────────────────╯
+╭──────────────────────────────────────────────────────────────╮
+│ 🔍 AI Code Review                                            │
+│ Model: deepseek-chat · Files: 1 · +23 -0                     │
+╰──────────────────────────────────────────────────────────────╯
 
-🔴 Potential null pointer dereference (line 42)
-   The variable `user` may be None when accessing `.name`.
-   → Suggestion: Add `if user is None: return` guard.
+🔴 SQL注入风险 (line 11)
+   通过字符串拼接构建SQL查询，攻击者可以注入恶意SQL代码。
+   → Suggestion: 使用参数化查询，如 cursor.execute('SELECT * FROM users WHERE name = ?', (query,))
 
-🟡 Inefficient nested loop (line 78)
-   O(n²) complexity in a hot path — consider using a set.
-   → Suggestion: `valid_ids = {x.id for x in items}`
+🔴 命令注入风险 (line 22)
+   使用 os.system 执行命令时，filename 参数未经过滤。
+   → Suggestion: 使用 subprocess.run(['cat', filename]) 代替
 
-🟢 Unclear variable name (line 15)
-   `df` is ambiguous. Consider `dataframe` or `records_df`.
-   → Suggestion: Rename to `user_dataframe` for clarity.
+🔴 不安全的反序列化 (line 27)
+   使用 pickle.load 反序列化用户可控数据，可能导致任意代码执行。
+   → Suggestion: 避免使用 pickle 处理不可信数据，改用 JSON 等安全格式
 
-────────────────────────────────────────────────────────────
-Summary: 1 critical · 1 warning · 1 suggestion
+🔴 硬编码密码 (line 34)
+   密码直接硬编码在代码中，容易泄露。
+   → Suggestion: 使用环境变量或安全的密钥管理服务存储密码
+
+🔴 除零错误 (line 38)
+   当 numbers 列表为空时导致 ZeroDivisionError。
+   → Suggestion: 在计算前检查 if not numbers: return 0
+
+🟡 O(n²) 嵌套循环 (line 16)
+   双重循环遍历同一列表，可用 itertools.combinations 优化。
+
+🟢 函数缺少类型注解 (line 7-40)
+   多个函数缺少参数和返回值类型注解。
+
+──────────────────────────────────────────────────────────────
+Summary: 11 critical · 4 warnings · 10 suggestions
 ```
 
 ---
@@ -201,7 +215,7 @@ ai-code-review/
 
 ## 📄 License
 
-MIT © Your Name
+MIT © ayh007
 
 ---
 

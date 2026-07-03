@@ -10,7 +10,7 @@ readme = "README.md"
 license = {text = "MIT"}
 requires-python = ">=3.10"
 authors = [
-    {name = "Your Name", email = "your@email.com"}
+    {name = "ayh007", email = "2951619401@qq.com"}
 ]
 keywords = ["code-review", "ai", "deepseek", "cli", "developer-tools"]
 classifiers = [
